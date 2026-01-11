@@ -4,11 +4,11 @@ import { TextInput, View } from 'react-native';
 
 type SearchBarProps = {
 	onPress: () => void;
+	value?: string;
+	onChangeText?: (text: string) => void;
 };
 
-const SearchBar = ({ onPress }: SearchBarProps) => {
-	const [searchText, setSearchText] = React.useState('');
-
+const SearchBar = ({ onPress, value, onChangeText }: SearchBarProps) => {
 	return (
 		<View className="flex-row items-center bg-dark-200 rounded-full px-5 py-4">
 			<Ionicons name="search" size={20} color="#888" />
@@ -16,9 +16,9 @@ const SearchBar = ({ onPress }: SearchBarProps) => {
 				placeholder="Search movies, TV shows..."
 				placeholderTextColor="#888"
 				className="ml-3 flex-1 text-white"
-				value={searchText}
+				value={value}
 				onPress={onPress}
-				onChangeText={setSearchText}
+				onChangeText={onChangeText}
 			/>
 		</View>
 	);
