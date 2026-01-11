@@ -4,7 +4,31 @@ import React from 'react';
 
 const TabLayout = () => {
 	return (
-		<Tabs>
+		<Tabs
+			screenOptions={{
+				tabBarShowLabel: false,
+				tabBarActiveTintColor: '#AB8BFF',
+				tabBarInactiveTintColor: '#888',
+				tabBarItemStyle: {
+					width: '100%',
+					height: '100%',
+					justifyContent: 'center',
+					alignItems: 'center',
+					paddingVertical: 10,
+				},
+				tabBarStyle: {
+					backgroundColor: '#0f0D23',
+					borderRadius: 20,
+					marginHorizontal: 10,
+					marginBottom: 36,
+					height: 30,
+					position: 'absolute',
+					overflow: 'hidden',
+					borderWidth: 1,
+					borderColor: '#0f0D23',
+				},
+			}}
+		>
 			<Tabs.Screen
 				name="index"
 				options={{
