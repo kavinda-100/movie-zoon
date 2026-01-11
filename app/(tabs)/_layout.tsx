@@ -20,7 +20,7 @@ const TabLayout = () => {
 					backgroundColor: '#0f0D23',
 					borderRadius: 20,
 					marginHorizontal: 10,
-					marginBottom: 36,
+					marginBottom: 40,
 					height: 30,
 					position: 'absolute',
 					overflow: 'hidden',
