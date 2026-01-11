@@ -3,6 +3,7 @@ import MovieCard from '@/components/MovieCard';
 import SearchBar from '@/components/SearchBar';
 import { useFetchMovies } from '@/hooks/useFetchMovies';
 import { useRouter } from 'expo-router';
+import React from 'react';
 import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -11,7 +12,12 @@ export default function Index() {
 	const router = useRouter();
 
 	// fetch movies
-	const { movies, isPending, isError, error, setQuery } = useFetchMovies();
+	const { movies, isPending, isError, error } = useFetchMovies();
+
+	// test set query to empty to fetch latest movies
+	// React.useEffect(() => {
+	// 	setQuery('iron man');
+	// }, [setQuery]);
 
 	// if loading
 	if (isPending) {
@@ -87,7 +93,7 @@ export default function Index() {
 							gap: 20,
 							marginBottom: 15,
 						}}
-						className="pb-32 mt-2"
+						className="mt-2 mb-150"
 					/>
 				</View>
 			</SafeAreaView>
