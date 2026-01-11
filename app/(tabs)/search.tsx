@@ -1,7 +1,7 @@
 import Header from '@/components/Header';
 import MovieCard from '@/components/MovieCard';
 import SearchBar from '@/components/SearchBar';
-import { useFetchMovies } from '@/hooks/useFetchMovies';
+import { useSearchMovies } from '@/hooks/useSearchMovies';
 import React from 'react';
 import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,7 +10,23 @@ const SearchScreen = () => {
 	const [searchText, setSearchText] = React.useState('');
 
 	// fetch movies
-	const { movies, isPending, isError, error, setQuery } = useFetchMovies();
+	const { movies, isPending, isError, error, setQuery, refetch } =
+		useSearchMovies();
+
+	// update query when searchText changes
+	React.useEffect(() => {
+		// debounce
+		const timeout = setTimeout(async () => {
+			if (searchText.trim()) {
+				// await queryClient.invalidateQueries({ queryKey: ['movies'] });
+				setQuery(searchText);
+				await refetch();
+			}
+		}, 500);
+
+		// cleanup
+		return () => clearTimeout(timeout);
+	}, [searchText, setQuery, refetch]);
 
 	// if loading
 	if (isPending) {
@@ -20,6 +36,15 @@ const SearchScreen = () => {
 					{/* header */}
 					<View className="my-4 mt-10">
 						<Header label="Search Movies" />
+					</View>
+
+					{/* SearchBar */}
+					<View className="w-full my-4">
+						<SearchBar
+							onPress={() => {}}
+							value={searchText}
+							onChangeText={setSearchText}
+						/>
 					</View>
 
 					<ActivityIndicator
@@ -40,6 +65,15 @@ const SearchScreen = () => {
 					{/* header */}
 					<View className="my-4 mt-10">
 						<Header label="Search Movies" />
+					</View>
+
+					{/* SearchBar */}
+					<View className="w-full my-4">
+						<SearchBar
+							onPress={() => {}}
+							value={searchText}
+							onChangeText={setSearchText}
+						/>
 					</View>
 
 					<View className="mt-10">
@@ -76,7 +110,12 @@ const SearchScreen = () => {
 				<View className="my-4">
 					{/* header */}
 					<Text className="mb-4 text-lg font-semibold text-white">
-						Latest Movies
+						{!isPending &&
+						!isError &&
+						searchText.trim() &&
+						movies.length > 0
+							? `Search Results for "${searchText}"`
+							: 'Search Movies'}
 					</Text>
 
 					{/* list */}
@@ -91,6 +130,17 @@ const SearchScreen = () => {
 						}}
 						className="mt-2 mb-150"
 						numColumns={3}
+						ListEmptyComponent={
+							!isPending && !isError ? (
+								<View className="px-5 mt-5">
+									<Text className="text-center text-white">
+										{searchText.trim()
+											? 'No results found.'
+											: 'Start typing to search for movies.'}
+									</Text>
+								</View>
+							) : null
+						}
 					/>
 				</View>
 			</SafeAreaView>

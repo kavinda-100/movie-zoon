@@ -14,11 +14,6 @@ export default function Index() {
 	// fetch movies
 	const { movies, isPending, isError, error } = useFetchMovies();
 
-	// test set query to empty to fetch latest movies
-	// React.useEffect(() => {
-	// 	setQuery('iron man');
-	// }, [setQuery]);
-
 	// if loading
 	if (isPending) {
 		return (

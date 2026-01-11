@@ -1,13 +1,10 @@
 import { fetchMovies } from '@/services/tmdb';
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
 
 export function useFetchMovies() {
-	const [query, setQuery] = React.useState('');
-
-	const { data, isPending, isError, error } = useQuery({
+	const { data, isPending, isError, error, refetch } = useQuery({
 		queryKey: ['movies'],
-		queryFn: async () => fetchMovies({ query: query }),
+		queryFn: async () => fetchMovies(),
 	});
 
 	return {
@@ -15,6 +12,6 @@ export function useFetchMovies() {
 		isPending,
 		isError,
 		error,
-		setQuery,
+		refetch,
 	};
 }
