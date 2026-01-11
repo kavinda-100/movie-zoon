@@ -21,6 +21,10 @@ export async function fetchMovies({ query }: { query: string }) {
 	});
 
 	if (!response.ok) {
+		console.log('Failed to fetch movies', {
+			error: response.statusText,
+			status: response.status,
+		});
 		throw new Error('Failed to fetch movies');
 	}
 
