@@ -26,7 +26,7 @@ export default function Index() {
 				<SafeAreaView className="flex-1">
 					{/* header */}
 					<View className="my-4 mt-10">
-						<Header />
+						<Header label="Movie Zoon" />
 					</View>
 
 					<ActivityIndicator
@@ -46,7 +46,7 @@ export default function Index() {
 				<SafeAreaView className="flex-1">
 					{/* header */}
 					<View className="my-4 mt-10">
-						<Header />
+						<Header label="Movie Zoon" />
 					</View>
 
 					<View className="mt-10">
@@ -67,7 +67,7 @@ export default function Index() {
 				{/* content */}
 				{/* header */}
 				<View className="my-4 mt-10">
-					<Header label="Search Movies" />
+					<Header label="Movie Zoon" />
 				</View>
 
 				{/* SearchBar */}
@@ -87,13 +87,13 @@ export default function Index() {
 						data={movies}
 						renderItem={({ item }) => <MovieCard movie={item} />}
 						keyExtractor={(item) => item.id.toString()}
-						numColumns={3}
 						columnWrapperStyle={{
 							justifyContent: 'flex-start',
 							gap: 20,
 							marginBottom: 15,
 						}}
 						className="mt-2 mb-150"
+						numColumns={3}
 					/>
 				</View>
 			</SafeAreaView>
