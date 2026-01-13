@@ -98,7 +98,7 @@ const SearchScreen = () => {
 				</View>
 
 				{/* SearchBar */}
-				<View className="my-4">
+				<View className="w-full my-4">
 					<SearchBar
 						onPress={() => {}}
 						value={searchText}
