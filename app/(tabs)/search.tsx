@@ -107,7 +107,7 @@ const SearchScreen = () => {
 				</View>
 
 				{/* movies list */}
-				<View className="my-4">
+				<View className="my-4 pb-80">
 					{/* header */}
 					<Text className="mb-4 text-lg font-semibold text-white">
 						{!isPending &&
