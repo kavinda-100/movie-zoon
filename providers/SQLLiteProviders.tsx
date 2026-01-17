@@ -10,6 +10,12 @@ import { ActivityIndicator, View } from 'react-native';
 //     poster_url: string;
 //   }
 
+// interface SaveMovie {
+// 	movie_id: number;
+// 	title: string;
+// 	poster_url: string;
+// }
+
 const onInit = async (db: SQLiteDatabase) => {
 	try {
 		await db.execAsync(`
@@ -19,6 +25,12 @@ const onInit = async (db: SQLiteDatabase) => {
                 movie_id INTEGER,
                 title TEXT NOT NULL,
                 count INTEGER,
+                poster_url TEXT NOT NULL
+            );
+			CREATE TABLE IF NOT EXISTS saved_movies (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                movie_id INTEGER,
+                title TEXT NOT NULL,
                 poster_url TEXT NOT NULL
             );
         `);

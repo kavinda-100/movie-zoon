@@ -6,6 +6,7 @@ import { useSQLiteContext, type SQLiteDatabase } from 'expo-sqlite';
 import React from 'react';
 import {
 	ActivityIndicator,
+	Alert,
 	Image,
 	ScrollView,
 	Text,
@@ -13,6 +14,7 @@ import {
 	View,
 } from 'react-native';
 
+// save recent search movie to the database
 const saveRecentSearchMovies = async (
 	db: SQLiteDatabase,
 	movie: RecentSearchMovie,
@@ -50,6 +52,44 @@ const saveRecentSearchMovies = async (
 	}
 };
 
+// save movie functionality
+const saveMovieToDB = async (
+	db: SQLiteDatabase,
+	movie: SaveMovie,
+	setIsSaved: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
+	// const table_name = 'saved_movies';
+	try {
+		// check if the movie already exists
+		const existsMovie = await db.getFirstAsync<SaveMovie>(
+			`SELECT * FROM saved_movies WHERE movie_id = ?`,
+			[movie.movie_id],
+		);
+		// if exists, remove it (unsave)
+		if (existsMovie) {
+			await db.runAsync(`DELETE FROM saved_movies WHERE movie_id = ?`, [
+				movie.movie_id,
+			]);
+			console.log('Removed movie from saved movies.');
+			Alert.alert(`${movie.title} removed from your movies.`);
+			setIsSaved(false);
+			return;
+		}
+		// if not exists, insert the new movie
+		await db.runAsync(
+			`INSERT INTO saved_movies (movie_id, title, poster_url) VALUES (?, ?, ?)`,
+			[movie.movie_id, movie.title, movie.poster_url],
+		);
+		console.log('Saved movie to saved movies.');
+		Alert.alert(`${movie.title} saved to your movies.`);
+		setIsSaved(true);
+	} catch (error) {
+		console.error('Error saving movie:', error);
+		Alert.alert('Error saving movie. Please try again.');
+	}
+};
+
+// movie detail screen component
 const MovieDetailScreen = () => {
 	// db context
 	const db = useSQLiteContext();
@@ -60,6 +100,9 @@ const MovieDetailScreen = () => {
 	// get movie details using the id
 	const { movieDetails, setMovieId, isPending, isError, error } =
 		useFetchMovieById();
+
+	// state for save the movie
+	const [isSaved, setIsSaved] = React.useState(false);
 
 	// when id changes, set the movie id to fetch details
 	React.useEffect(() => {
@@ -110,7 +153,7 @@ const MovieDetailScreen = () => {
 	}
 
 	return (
-		<View className="flex-1 bg-primary">
+		<View className="relative flex-1 bg-primary">
 			<ScrollView
 				contentContainerStyle={{
 					paddingBottom: 80,
@@ -223,6 +266,25 @@ const MovieDetailScreen = () => {
 							Go Back
 						</Text>
 					</View>
+				</TouchableOpacity>
+
+				{/* save movie button (floating button on top) */}
+				<TouchableOpacity
+					className="absolute p-3 rounded-full shadow-lg top-10 right-5"
+					style={{ backgroundColor: isSaved ? '#AB8BFF' : '#030014' }}
+					onPress={() => {
+						saveMovieToDB(
+							db,
+							{
+								movie_id: movieDetails!.id,
+								title: movieDetails!.title,
+								poster_url: `https://image.tmdb.org/t/p/w500${movieDetails?.poster_path}`,
+							},
+							setIsSaved,
+						);
+					}}
+				>
+					<Ionicons name="bookmark" size={20} color="#fff" />
 				</TouchableOpacity>
 			</ScrollView>
 		</View>

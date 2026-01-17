@@ -23,6 +23,12 @@ interface RecentSearchMovie {
 	poster_url: string;
 }
 
+interface SaveMovie {
+	movie_id: number;
+	title: string;
+	poster_url: string;
+}
+
 interface MovieDetails {
 	adult: boolean;
 	backdrop_path: string | null;
