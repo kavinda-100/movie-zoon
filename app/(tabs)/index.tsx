@@ -102,6 +102,40 @@ export default function Index() {
 		);
 	}
 
+	// Render header content
+	const renderListHeader = () => (
+		<>
+			{/* recent search movies list */}
+			{isRecentSearchPending ? (
+				<View className="items-center justify-center w-full mt-2">
+					<ActivityIndicator
+						size="small"
+						color="#fff"
+						className="self-center mt-2"
+					/>
+				</View>
+			) : recentSearchError ? (
+				<View className="items-center justify-center w-full mt-2">
+					<Text className="text-center text-white">
+						{recentSearchError ??
+							'Error fetching recent search movies.'}
+					</Text>
+				</View>
+			) : recentSearchMovies.length > 0 ? (
+				<View className="my-4">
+					<RecentSearch recentSearchMovies={recentSearchMovies} />
+				</View>
+			) : null}
+
+			{/* movies list header */}
+			<View className="my-4">
+				<Text className="mb-4 text-lg font-semibold text-white">
+					Latest Movies
+				</Text>
+			</View>
+		</>
+	);
+
 	// main return
 	return (
 		<View className="flex-1 px-3 bg-primary">
@@ -117,61 +151,31 @@ export default function Index() {
 					<SearchBar onPress={() => router.push('/search')} />
 				</View>
 
-				{/* recent search movies list */}
-				{isRecentSearchPending ? (
-					<View className="items-center justify-center w-full mt-2">
-						<ActivityIndicator
-							size="small"
-							color="#fff"
-							className="self-center mt-2"
-						/>
-					</View>
-				) : recentSearchError ? (
-					<View className="items-center justify-center w-full mt-2">
-						<Text className="text-center text-white">
-							{recentSearchError ??
-								'Error fetching recent search movies.'}
-						</Text>
-					</View>
-				) : (
-					recentSearchMovies.length > 0 && (
-						<View className="my-4">
-							<RecentSearch
-								recentSearchMovies={recentSearchMovies}
-							/>
-						</View>
-					)
-				)}
-
 				{/* movies list */}
-				<View className="my-4 pb-80">
-					{/* header */}
-					<Text className="mb-4 text-lg font-semibold text-white">
-						Latest Movies
-					</Text>
-
-					{/* list */}
-					<FlatList
-						data={movies}
-						renderItem={({ item }) => <MovieCard movie={item} />}
-						keyExtractor={(item) => item.id.toString()}
-						columnWrapperStyle={{
-							justifyContent: 'flex-start',
-							gap: 20,
-							marginBottom: 15,
-						}}
-						className="mt-2 mb-150"
-						numColumns={3}
-						refreshControl={
-							<RefreshControl
-								refreshing={refreshing}
-								onRefresh={onRefresh}
-								tintColor="#fff"
-								colors={['#fff']}
-							/>
-						}
-					/>
-				</View>
+				<FlatList
+					data={movies}
+					renderItem={({ item }) => <MovieCard movie={item} />}
+					keyExtractor={(item) => item.id.toString()}
+					ListHeaderComponent={renderListHeader}
+					columnWrapperStyle={{
+						justifyContent: 'flex-start',
+						gap: 20,
+						marginBottom: 15,
+					}}
+					contentContainerStyle={{
+						paddingBottom: 20,
+					}}
+					numColumns={3}
+					showsVerticalScrollIndicator={false}
+					refreshControl={
+						<RefreshControl
+							refreshing={refreshing}
+							onRefresh={onRefresh}
+							tintColor="#fff"
+							colors={['#fff']}
+						/>
+					}
+				/>
 			</SafeAreaView>
 		</View>
 	);
