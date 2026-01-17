@@ -1,6 +1,8 @@
 import { useFetchMovieById } from '@/hooks/useFetchMovieById';
+import { formatCurrency, formatRuntime } from '@/lib';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useSQLiteContext } from 'expo-sqlite';
 import React from 'react';
 import {
 	ActivityIndicator,
@@ -11,24 +13,9 @@ import {
 	View,
 } from 'react-native';
 
-// format runtime in minutes
-function formatRuntime(runtime: number) {
-	return Intl.NumberFormat('en-US', {
-		style: 'unit',
-		unit: 'minute',
-		unitDisplay: 'short',
-	}).format(runtime);
-}
-
-//format currency
-function formatCurrency(amount: number) {
-	return Intl.NumberFormat('en-US', {
-		style: 'currency',
-		currency: 'USD',
-	}).format(amount);
-}
-
 const MovieDetailScreen = () => {
+	// db context
+	const db = useSQLiteContext();
 	// router
 	const router = useRouter();
 	// movie id from route params
@@ -37,6 +24,7 @@ const MovieDetailScreen = () => {
 	const { movieDetails, setMovieId, isPending, isError, error } =
 		useFetchMovieById();
 
+	// when id changes, set the movie id to fetch details
 	React.useEffect(() => {
 		// if id is not present, do nothing
 		if (!id) return;
