@@ -89,6 +89,27 @@ const saveMovieToDB = async (
 	}
 };
 
+// function to update saved state
+const checkIfMovieIsSaved = async (
+	db: SQLiteDatabase,
+	movie_id: number,
+	setIsSaved: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
+	try {
+		const existsMovie = await db.getFirstAsync<SaveMovie>(
+			`SELECT * FROM saved_movies WHERE movie_id = ?`,
+			[movie_id],
+		);
+		if (existsMovie) {
+			setIsSaved(true);
+		} else {
+			setIsSaved(false);
+		}
+	} catch (error) {
+		console.error('Error checking if movie is saved:', error);
+	}
+};
+
 // movie detail screen component
 const MovieDetailScreen = () => {
 	// db context
@@ -130,6 +151,15 @@ const MovieDetailScreen = () => {
 
 		// save to recent search movies in the database
 		saveRecentSearchMovies(db, recentSearchMovie);
+	}, [movieDetails, db]);
+
+	// when movieDetails changes, check if the movie is saved
+	React.useEffect(() => {
+		// if movieDetails is not present, do nothing
+		if (!movieDetails) return;
+
+		// check if the movie is saved
+		checkIfMovieIsSaved(db, movieDetails.id, setIsSaved);
 	}, [movieDetails, db]);
 
 	// render loading state
