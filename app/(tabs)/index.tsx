@@ -1,5 +1,6 @@
 import Header from '@/components/Header';
 import MovieCard from '@/components/MovieCard';
+import RecentSearch from '@/components/RecentSearch';
 import SearchBar from '@/components/SearchBar';
 import { useFetchMovies } from '@/hooks/useFetchMovies';
 import { useGetRecentSearchMovies } from '@/hooks/useGetRecentSearchMovies';
@@ -26,7 +27,7 @@ export default function Index() {
 		error: recentSearchError,
 	} = useGetRecentSearchMovies(db);
 
-	console.log('Recent Search Movies:', recentSearchMovies);
+	// console.log('Recent Search Movies:', recentSearchMovies);
 
 	// fetch recent search movies on mount
 	React.useEffect(() => {
@@ -90,6 +91,11 @@ export default function Index() {
 				</View>
 
 				{/* recent search movies list */}
+				{recentSearchMovies.length > 0 && (
+					<View className="my-4">
+						<RecentSearch recentSearchMovies={recentSearchMovies} />
+					</View>
+				)}
 
 				{/* movies list */}
 				<View className="my-4 pb-80">
