@@ -14,8 +14,10 @@ export const TMDB_CONFIG = {
  * This function fetches a list of movies from TMDB API.
  * @returns List of all movies
  */
-export async function fetchMovies() {
-	const endPoint = `${TMDB_CONFIG.BASE_URL}/discover/movie?include_adult=false&include_video=false&language=en-US&sort_by=popularity.desc'`;
+export async function fetchMovies({
+	pageParam = 1,
+}: { pageParam?: number } = {}) {
+	const endPoint = `${TMDB_CONFIG.BASE_URL}/discover/movie?include_adult=false&include_video=false&language=en-US&page=${pageParam}&sort_by=popularity.desc`;
 
 	const response = await fetch(endPoint, {
 		method: 'GET',
@@ -31,7 +33,13 @@ export async function fetchMovies() {
 	}
 
 	const data = await response.json();
-	return data.results;
+	// Return full response for pagination support
+	return {
+		results: data.results,
+		page: data.page,
+		total_pages: data.total_pages,
+		total_results: data.total_results,
+	};
 }
 
 /**

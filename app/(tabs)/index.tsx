@@ -32,6 +32,9 @@ export default function Index() {
 		isError,
 		error,
 		refetch: refetchMovies,
+		fetchNextPage,
+		hasNextPage,
+		isFetchingNextPage,
 	} = useFetchMovies();
 
 	// fetch recent search movies
@@ -174,6 +177,18 @@ export default function Index() {
 							tintColor="#fff"
 							colors={['#fff']}
 						/>
+					}
+					onEndReached={() => {
+						if (hasNextPage) {
+							fetchNextPage();
+						}
+					}}
+					ListEmptyComponent={
+						isFetchingNextPage || isPending ? (
+							<View className="items-center justify-center w-full mt-2 h-52">
+								<ActivityIndicator size="large" color="#fff" />
+							</View>
+						) : null
 					}
 				/>
 			</SafeAreaView>
