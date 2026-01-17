@@ -2,7 +2,7 @@ import { useFetchMovieById } from '@/hooks/useFetchMovieById';
 import { formatCurrency, formatRuntime } from '@/lib';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useSQLiteContext } from 'expo-sqlite';
+import { useSQLiteContext, type SQLiteDatabase } from 'expo-sqlite';
 import React from 'react';
 import {
 	ActivityIndicator,
@@ -12,6 +12,43 @@ import {
 	TouchableOpacity,
 	View,
 } from 'react-native';
+
+const saveRecentSearchMovies = async (
+	db: SQLiteDatabase,
+	movie: RecentSearchMovie,
+) => {
+	// const table_name = 'recent_search_movies';
+	try {
+		// check if the movie already exists
+		const existsMovie = await db.getFirstAsync<RecentSearchMovie>(
+			`SELECT * FROM recent_search_movies WHERE movie_id = ?`,
+			[movie.movie_id],
+		);
+		// if exists, update the count
+		if (existsMovie) {
+			await db.runAsync(
+				`UPDATE recent_search_movies SET count = ? WHERE movie_id = ?`,
+				[existsMovie.count + 1, movie.movie_id],
+			);
+			console.log('Updated existing movie in recent searches.');
+			return;
+		}
+		// if not exists, insert the new movie
+		await db.runAsync(
+			`INSERT INTO recent_search_movies (searchTerm, movie_id, title, count, poster_url) VALUES (?, ?, ?, ?, ?)`,
+			[
+				movie.searchTerm,
+				movie.movie_id,
+				movie.title,
+				movie.count,
+				movie.poster_url,
+			],
+		);
+		console.log('Inserted new movie into recent searches.');
+	} catch (error) {
+		console.error('Error saving recent search movie:', error);
+	}
+};
 
 const MovieDetailScreen = () => {
 	// db context
@@ -33,6 +70,24 @@ const MovieDetailScreen = () => {
 		const movieId = Number(id);
 		setMovieId(movieId);
 	}, [id, setMovieId]);
+
+	// when movieDetails changes, save to recent search movies
+	React.useEffect(() => {
+		// if movieDetails is not present, do nothing
+		if (!movieDetails) return;
+
+		// prepare the recent search movie object
+		const recentSearchMovie: RecentSearchMovie = {
+			searchTerm: movieDetails.title,
+			movie_id: movieDetails.id,
+			title: movieDetails.title,
+			count: 1,
+			poster_url: `https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`,
+		};
+
+		// save to recent search movies in the database
+		saveRecentSearchMovies(db, recentSearchMovie);
+	}, [movieDetails, db]);
 
 	// render loading state
 	if (isPending) {

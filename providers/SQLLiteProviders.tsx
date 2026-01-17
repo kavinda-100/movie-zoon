@@ -2,7 +2,7 @@ import { SQLiteProvider, type SQLiteDatabase } from 'expo-sqlite';
 import React, { Suspense } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 
-// interface TrendingMovie {
+// interface RecentSearchMovie {
 //     searchTerm: string;
 //     movie_id: number;
 //     title: string;
@@ -13,7 +13,7 @@ import { ActivityIndicator, View } from 'react-native';
 const onInit = async (db: SQLiteDatabase) => {
 	try {
 		await db.execAsync(`
-            CREATE TABLE IF NOT EXISTS trending_movie (
+            CREATE TABLE IF NOT EXISTS recent_search_movies (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 searchTerm TEXT NOT NULL,
                 movie_id INTEGER,
