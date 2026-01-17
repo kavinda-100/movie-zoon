@@ -7,7 +7,13 @@ import { useGetRecentSearchMovies } from '@/hooks/useGetRecentSearchMovies';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import React from 'react';
-import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import {
+	ActivityIndicator,
+	FlatList,
+	RefreshControl,
+	Text,
+	View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Index() {
@@ -16,8 +22,17 @@ export default function Index() {
 	// router
 	const router = useRouter();
 
+	// refresh state
+	const [refreshing, setRefreshing] = React.useState(false);
+
 	// fetch movies
-	const { movies, isPending, isError, error } = useFetchMovies();
+	const {
+		movies,
+		isPending,
+		isError,
+		error,
+		refetch: refetchMovies,
+	} = useFetchMovies();
 
 	// fetch recent search movies
 	const {
@@ -33,6 +48,18 @@ export default function Index() {
 	React.useEffect(() => {
 		getRecentSearchMovies();
 	}, [getRecentSearchMovies]);
+
+	// handle refresh
+	const onRefresh = React.useCallback(async () => {
+		setRefreshing(true);
+		try {
+			await Promise.all([refetchMovies(), getRecentSearchMovies()]);
+		} catch (error) {
+			console.error('Error refreshing:', error);
+		} finally {
+			setRefreshing(false);
+		}
+	}, [refetchMovies, getRecentSearchMovies]);
 
 	// if loading
 	if (isPending) {
@@ -91,10 +118,29 @@ export default function Index() {
 				</View>
 
 				{/* recent search movies list */}
-				{recentSearchMovies.length > 0 && (
-					<View className="my-4">
-						<RecentSearch recentSearchMovies={recentSearchMovies} />
+				{isRecentSearchPending ? (
+					<View className="items-center justify-center w-full mt-2">
+						<ActivityIndicator
+							size="small"
+							color="#fff"
+							className="self-center mt-2"
+						/>
 					</View>
+				) : recentSearchError ? (
+					<View className="items-center justify-center w-full mt-2">
+						<Text className="text-center text-white">
+							{recentSearchError ??
+								'Error fetching recent search movies.'}
+						</Text>
+					</View>
+				) : (
+					recentSearchMovies.length > 0 && (
+						<View className="my-4">
+							<RecentSearch
+								recentSearchMovies={recentSearchMovies}
+							/>
+						</View>
+					)
 				)}
 
 				{/* movies list */}
@@ -116,6 +162,14 @@ export default function Index() {
 						}}
 						className="mt-2 mb-150"
 						numColumns={3}
+						refreshControl={
+							<RefreshControl
+								refreshing={refreshing}
+								onRefresh={onRefresh}
+								tintColor="#fff"
+								colors={['#fff']}
+							/>
+						}
 					/>
 				</View>
 			</SafeAreaView>
