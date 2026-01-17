@@ -138,6 +138,15 @@ const SavedScreen = () => {
 							colors={['#fff']}
 						/>
 					}
+					ListEmptyComponent={
+						!isPending && !error ? (
+							<View className="px-5 mt-5">
+								<Text className="text-center text-white">
+									You have no saved movies.
+								</Text>
+							</View>
+						) : null
+					}
 				/>
 			</SafeAreaView>
 		</View>
