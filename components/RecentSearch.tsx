@@ -16,12 +16,10 @@ const RecentSearch = ({
 
 			{/* List */}
 			<FlatList
-				horizontal={true}
-				showsHorizontalScrollIndicator={false}
 				data={recentSearchMovies}
 				renderItem={({ item }) => (
 					<Link href={`/movies/${item.movie_id}`} asChild>
-						<TouchableOpacity className="w-[30%] mr-4">
+						<TouchableOpacity className="relative w-32 mr-4">
 							{/* poster */}
 							<Image
 								source={{
@@ -40,11 +38,18 @@ const RecentSearch = ({
 							>
 								{item.title}
 							</Text>
+
+							{/* count */}
+							<Text className="absolute px-2.5 py-1 text-sm text-white bg-black rounded-full top-2 right-2 bg-opacity-60">
+								{item.count}
+							</Text>
 						</TouchableOpacity>
 					</Link>
 				)}
 				keyExtractor={(item) => item.movie_id.toString()}
-				className="mt-2"
+				horizontal={true}
+				showsHorizontalScrollIndicator={false}
+				className="w-full mt-2"
 			/>
 		</View>
 	);
