@@ -2,17 +2,36 @@ import Header from '@/components/Header';
 import MovieCard from '@/components/MovieCard';
 import SearchBar from '@/components/SearchBar';
 import { useFetchMovies } from '@/hooks/useFetchMovies';
+import { useGetRecentSearchMovies } from '@/hooks/useGetRecentSearchMovies';
 import { useRouter } from 'expo-router';
+import { useSQLiteContext } from 'expo-sqlite';
 import React from 'react';
 import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Index() {
+	// db context
+	const db = useSQLiteContext();
 	// router
 	const router = useRouter();
 
 	// fetch movies
 	const { movies, isPending, isError, error } = useFetchMovies();
+
+	// fetch recent search movies
+	const {
+		getRecentSearchMovies,
+		recentSearchMovies,
+		isPending: isRecentSearchPending,
+		error: recentSearchError,
+	} = useGetRecentSearchMovies(db);
+
+	console.log('Recent Search Movies:', recentSearchMovies);
+
+	// fetch recent search movies on mount
+	React.useEffect(() => {
+		getRecentSearchMovies();
+	}, [getRecentSearchMovies]);
 
 	// if loading
 	if (isPending) {
@@ -69,6 +88,8 @@ export default function Index() {
 				<View className="my-4">
 					<SearchBar onPress={() => router.push('/search')} />
 				</View>
+
+				{/* recent search movies list */}
 
 				{/* movies list */}
 				<View className="my-4 pb-80">
