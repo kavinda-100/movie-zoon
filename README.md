@@ -152,7 +152,7 @@ React.useEffect(() => {
 2. **Install dependencies**
 
     ```bash
-    npm install
+    bun install
     ```
 
 3. **Configure environment variables**
@@ -165,15 +165,15 @@ React.useEffect(() => {
 4. **Start the development server**
 
     ```bash
-    npm start
+    bun start
     # or
-    npx expo start
+    bun expo start
     ```
 
 5. **Run on your preferred platform**
-    - **Android**: Press `a` or run `npm run android`
-    - **iOS**: Press `i` or run `npm run ios`
-    - **Web**: Press `w` or run `npm run web`
+    - **Android**: Press `a` or run `bun run android`
+    - **iOS**: Press `i` or run `bun run ios`
+    - **Web**: Press `w` or run `bun run web`
 
 ## 📱 Supported Platforms
 
@@ -213,11 +213,11 @@ colors: {
 ## 🧪 Available Scripts
 
 ```bash
-npm start          # Start Expo development server
-npm run android    # Run on Android device/emulator
-npm run ios        # Run on iOS device/simulator
-npm run web        # Run on web browser
-npm run lint       # Run ESLint for code quality
+bun start          # Start Expo development server
+bun run android    # Run on Android device/emulator
+bun run ios        # Run on iOS device/simulator
+bun run web        # Run on web browser
+bun run lint       # Run ESLint for code quality
 ```
 
 ## 📄 API Documentation
