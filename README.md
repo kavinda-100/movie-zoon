@@ -228,6 +228,15 @@ This app integrates with TMDB API endpoints:
 - `/search/movie` - Movie search functionality
 - `/movie/{id}` - Detailed movie information
 
+## Screenshots
+
+<div align="center" style="display: flex; gap: 10px; flex-wrap: wrap;">
+ <img src="public/home-screen.jpg" alt="Home Screen" width="200" />
+ <img src="public/search-screen.jpg" alt="Search Screen" width="200" />
+ <img src="public/detail-screen.jpg" alt="Movie Details" width="200" />
+ <img src="public/saved-screen.jpg" alt="Saved Movies" width="200" />
+</div>
+
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -241,7 +250,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-**Kavinda Senarathne** - [@kavinda-100](https://github.com/kavinda-100)
+**Kavinda Rathnayake** - [@kavinda-100](https://github.com/kavinda-100)
 
 Project Link: [https://github.com/kavinda-100/movie-zoon](https://github.com/kavinda-100/movie-zoon)
 
